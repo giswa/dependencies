@@ -13,6 +13,10 @@ public class Project{
         SourcePath = path ;
         BaseDirectory = new FileInfo(path).Directory.FullName;
         Filename = Path.GetFileName(path);
+        
+        // recursive search sub-dependencies
+        Search();
+        Console.WriteLine($"Parsed: {Filename}. Found {Dependencies.Count} dependencies");  
     }
 
     public void Search(){
@@ -27,27 +31,27 @@ public class Project{
         {
             // get attribute *relative* file path (Include)
             string referencePath = node.Attributes["Include"]?.Value;
-            if (!String.IsNullOrEmpty( referencePath)){
+            if (!String.IsNullOrEmpty(referencePath)){
                 // replace DirectorySeparatorChar. Seems to be always in Windows format in .proj files
                 referencePath = referencePath.Replace(@"\", Path.DirectorySeparatorChar.ToString());
                 string fullPath = Path.GetFullPath(referencePath, BaseDirectory);
                 Project p = new Project(fullPath);
                 // add to dependency
                 Dependencies.Add(p);
-                // recursive search sub-dependencies
-                p.Search();
+
             }
         }
-
     }
 
 
     public void  Output(){
 
-        foreach (Project dep in Dependencies){
-            Console.WriteLine($"{Filename} --> {dep.Filename}");
-
-        } 
+        if (Dependencies?.Count > 0){
+            foreach (Project dep in Dependencies){
+                Console.WriteLine($"{Filename} --> {dep.Filename}");
+                dep.Output();
+            }
+        }
     }
 
 }

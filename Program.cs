@@ -6,10 +6,7 @@ if (args.Length > 0){
     bool exists = pathString.IndexOfAny(Path.GetInvalidPathChars()) == -1;
 
     if (exists) {
-        Console.WriteLine($"Parsing: {pathString}");  
         Project p = new Project(pathString); 
-        //scan project files for dependencies
-        p.Search();
         //export graph
         p.Output();
     }
