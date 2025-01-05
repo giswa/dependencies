@@ -8,7 +8,9 @@ if (args.Length > 0){
     if (exists) {
         Project p = new Project(pathString); 
         //export graph
-        p.Output();
+        string text = p.Output();
+        // Write text file
+        File.WriteAllText(Path.Combine("output", "mermaid.txt"), text);
     }
 } else {
     Console.WriteLine($"Project path is missing");  

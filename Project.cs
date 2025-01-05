@@ -19,8 +19,9 @@ public class Project{
         BaseDirectory = new FileInfo(path).Directory.FullName;
         Filename = Path.GetFileName(path);  
     
-        // recursive search sub-dependencies
+        // if the project wasn't already parsed
         if ( ! Globals.FLAT.Contains(Filename) ){
+            // recursive search sub-dependencies
             Search();
             Console.WriteLine($"Parsed: {SourcePath}. Depth {Depth}, Found {Dependencies.Count} dependencies"); 
             Globals.FLAT.Add(Filename);
@@ -52,14 +53,15 @@ public class Project{
     }
 
 
-    public void  Output(){
-
+    public string Output(){
+        string str = "" ;
         if (Dependencies?.Count > 0){
             foreach (Project dep in Dependencies){
-                Console.WriteLine($"{Filename} --> {dep.Filename}");
-                dep.Output();
+                str += ($"{Filename} --> {dep.Filename} \r\n");
+                str += dep.Output();
             }
         }
+        return str ;
     }
 
 }
