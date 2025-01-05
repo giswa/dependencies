@@ -20,8 +20,11 @@ public class Project{
         Filename = Path.GetFileName(path);  
     
         // recursive search sub-dependencies
-        Search();
-        Console.WriteLine($"Parsed: {SourcePath}. Depth {Depth}, Found {Dependencies.Count} dependencies");  
+        if ( ! Globals.FLAT.Contains(Filename) ){
+            Search();
+            Console.WriteLine($"Parsed: {SourcePath}. Depth {Depth}, Found {Dependencies.Count} dependencies"); 
+            Globals.FLAT.Add(Filename);
+        }
     }
 
     public void Search(){
@@ -40,9 +43,9 @@ public class Project{
                 // replace DirectorySeparatorChar. Seems to be always in Windows format in .proj files
                 referencePath = referencePath.Replace(@"\", Path.DirectorySeparatorChar.ToString());
                 string fullPath = Path.GetFullPath(referencePath, BaseDirectory);
-                Project p = new Project(fullPath, Depth);
-                // add to dependency
-                Dependencies.Add(p);
+                    Project p = new Project(fullPath, Depth);
+                    // add to dependency
+                    Dependencies.Add(p);
 
             }
         }
