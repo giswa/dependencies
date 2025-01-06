@@ -6,7 +6,7 @@ public class Project{
     private string SourcePath { get; set; }
     private XmlDocument XmlTree { get; set; }
     private string BaseDirectory { get; set; }
-    private string Filename { get; set; }
+    public string Filename { get; set; }
     private int Depth { get; set; }
     public List<Project> Dependencies {get; set;}
 

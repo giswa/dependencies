@@ -9,8 +9,23 @@ if (args.Length > 0){
         Project p = new Project(pathString); 
         //export graph
         string text = p.Output();
-        // Write text file
-        File.WriteAllText(Path.Combine("output", "mermaid.txt"), text);
+        string title = p.Filename ;
+        string outputfile = title + ".html" ;
+
+        // Write output from html template
+        var template = File.ReadAllText("template.html");
+        var html = template
+            .Replace("{{output}}", text)
+            .Replace("{{title}}", title);
+
+        File.WriteAllText(outputfile, html);
+
+        // done
+        Console.WriteLine("---");
+        Console.WriteLine("output graph: " + outputfile);
+        Console.WriteLine("run cmd: start " + outputfile );
+        
+
     }
 } else {
     Console.WriteLine($"Project path is missing");  
