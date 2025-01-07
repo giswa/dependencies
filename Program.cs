@@ -43,16 +43,19 @@ static void Treeview(List<Project> nodes, string level) {
     string treeOpen =    "│   " ;
     string treeClosed =  "    " ;
 
-    int position = 0 ;
-    int last = nodes.Count - 1 ;
+    if (nodes != null){
 
-    foreach(Project node in nodes) {
-        bool end = position == last ;
-        string treeSeparator = end ? treeEnd : treeLevel ;
-        string LevelSeparator = end ? treeClosed : treeOpen ;
-        
-        Console.WriteLine( level + treeSeparator +  node.Filename);
-        Treeview(node.Dependencies, level + LevelSeparator);
-        position ++ ;
+        int position = 0 ;
+        int last = nodes.Count - 1 ;
+
+        foreach(Project node in nodes) {
+            bool end = position == last ;
+            string treeSeparator = end ? treeEnd : treeLevel ;
+            string LevelSeparator = end ? treeClosed : treeOpen ;
+            
+            Console.WriteLine( level + treeSeparator +  node.Filename);
+            Treeview(node.Dependencies, level + LevelSeparator);
+            position ++ ;
+        }
     }
 }
