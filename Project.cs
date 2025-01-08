@@ -4,7 +4,7 @@ using System.Xml;
 public class Project{
 
     private string SourcePath { get; set; }
-    private XmlDocument XmlTree { get; set; }
+
     private string BaseDirectory { get; set; }
     public string Filename { get; set; }
     private int Depth { get; set; }
@@ -31,12 +31,13 @@ public class Project{
     public void Search(){
         Dependencies = new List<Project>();
         
-        XmlTree = new XmlDocument();
+		XmlDocument XmlTree = new XmlDocument();
         XmlTree.Load(SourcePath);
         // get all project reference nodes
-        var projectReferenceNodes = XmlTree.SelectNodes("//*[local-name() = 'ProjectReference']");
+        var nodes = XmlTree.SelectNodes("//*[local-name() = 'ProjectReference']");
+		if (nodes != null)
         // loop through
-        foreach (XmlNode node in projectReferenceNodes)
+            foreach (XmlNode node in nodes)
         {
             // get attribute *relative* file path (Include)
             string referencePath = node.Attributes["Include"]?.Value;
