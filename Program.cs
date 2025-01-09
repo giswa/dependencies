@@ -14,6 +14,7 @@ if (args.Length > 0){
         Treeview(p.Dependencies,"") ;
 
         //export graph
+         Globals.FLAT = new Dictionary<String, Project>() ;
         string text = p.Output();
         string title = p.Filename ;
         string outputfile = title + ".html" ;

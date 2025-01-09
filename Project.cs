@@ -63,7 +63,12 @@ public class Project{
         string str = "" ;
         if (Dependencies?.Count > 0){
             foreach (Project dep in Dependencies){
-                str += ($"{Filename} --> {dep.Filename} \r\n");
+                string link = $"{Filename} --> {dep.Filename}";
+                if (!Globals.FLAT.Keys.Contains(link))
+                {
+                    str += link + "\n" ; 
+                    Globals.FLAT.Add(link,null); //no need to store the project
+                }
                 str += dep.Output();
             }
         }
