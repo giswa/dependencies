@@ -38,20 +38,21 @@ public class Project{
                 // replace DirectorySeparatorChar. Seems to be always in Windows format in .proj files
                 referencePath = referencePath.Replace(@"\", Path.DirectorySeparatorChar.ToString());
                 string fullPath = Path.GetFullPath(referencePath, BaseDirectory);
-                    Project p = new Project(fullPath, Depth);
 
-                    // if the project wasn't already parsed
-                     if (!Globals.FLAT.Contains(fullPath))
-                    {
-                        // recursive search sub - dependencies
-
-                        p.Search();
-						Globals.FLAT.Add(fullPath);
-
-					}
-
-                    // add to dependency
-                    Dependencies.Add(p);
+                Project p;
+                // if the project wasn't already parsed
+                if (!Globals.FLAT.ContainsKey(fullPath))
+                {
+                    p = new Project(fullPath, Depth);
+                    p.Search();
+                    Globals.FLAT.Add(fullPath,p);
+                }
+                else 
+                {
+                    p = Globals.FLAT[fullPath];
+                }
+                // add to dependency
+                Dependencies.Add(p);
 
             }
         }

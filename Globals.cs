@@ -1,6 +1,6 @@
 public static class Globals
 {
 
-    public static List<String> FLAT = new List<String>() ;
+    public static Dictionary<String, Project> FLAT = new Dictionary<String, Project>() ;
 
 }
