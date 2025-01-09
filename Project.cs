@@ -10,7 +10,7 @@ public class Project{
     private int Depth { get; set; }
     public List<Project> Dependencies {get; set;}
 
-    public Project(string path) : this(path, 0) {}
+
 
     public Project(string path, int depth) 
     {
@@ -19,13 +19,6 @@ public class Project{
         BaseDirectory = new FileInfo(path).Directory.FullName;
         Filename = Path.GetFileName(path);  
     
-        // if the project wasn't already parsed
-        if ( ! Globals.FLAT.Contains(Filename) ){
-            // recursive search sub-dependencies
-            Search();
-            Console.WriteLine($"Parsed: {SourcePath}. Depth {Depth}, Found {Dependencies.Count} dependencies"); 
-            Globals.FLAT.Add(Filename);
-        }
     }
 
     public void Search(){
@@ -46,6 +39,17 @@ public class Project{
                 referencePath = referencePath.Replace(@"\", Path.DirectorySeparatorChar.ToString());
                 string fullPath = Path.GetFullPath(referencePath, BaseDirectory);
                     Project p = new Project(fullPath, Depth);
+
+                    // if the project wasn't already parsed
+                     if (!Globals.FLAT.Contains(fullPath))
+                    {
+                        // recursive search sub - dependencies
+
+                        p.Search();
+						Globals.FLAT.Add(fullPath);
+
+					}
+
                     // add to dependency
                     Dependencies.Add(p);
 
