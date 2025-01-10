@@ -11,8 +11,10 @@ if (args.Length > 0){
         
         Console.WriteLine("");
         Console.WriteLine(p.Filename);
-        Treeview(p.Dependencies,"") ;
-
+        Treeview(p.Dependencies,"", "") ;
+        return ;
+        Console.WriteLine("");
+        Console.WriteLine("Creating graph");
         //export graph
          Globals.FLAT = new Dictionary<String, Project>() ;
         string text = p.Output();
@@ -39,7 +41,7 @@ if (args.Length > 0){
 }
 
 
-static void Treeview(List<Project> nodes, string level) {
+static void Treeview(List<Project> nodes, string level, string branch ) {
     string treeLevel =   "├── " ;
     string treeEnd =     "└── " ;
     string treeOpen =    "│   " ;
@@ -55,8 +57,20 @@ static void Treeview(List<Project> nodes, string level) {
             string treeSeparator = end ? treeEnd : treeLevel ;
             string LevelSeparator = end ? treeClosed : treeOpen ;
             
-            Console.WriteLine( level + treeSeparator +  node.Filename);
-            Treeview(node.Dependencies, level + LevelSeparator);
+            bool circular = branch.Contains(node.Filename) ? true : false ;
+            branch += $" > {node.Filename}" ;
+            Console.WriteLine( level + treeSeparator +  node.Filename +  $"-->({branch})" );
+
+            if ( circular) {
+                // Console.WriteLine( level + branch + $" !> [{node.Filename}]");
+            }
+            else
+            {
+                //Console.Write("\r\n");
+                // if (node.Dependencies.Count == 0 ) branch = new List<String>() ;
+                Treeview(node.Dependencies, level + LevelSeparator , branch );
+
+            }
             position ++ ;
         }
     }
