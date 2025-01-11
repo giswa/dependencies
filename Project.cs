@@ -9,8 +9,7 @@ public class Project{
     public string Filename { get; set; }
     private int Depth { get; set; }
     public List<Project> Dependencies {get; set;}
-
-
+    public List<String> Ancesters {get; set;}
 
     public Project(string path, int depth) 
     {
