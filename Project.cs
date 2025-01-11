@@ -48,7 +48,10 @@ public class Project{
                 }
                 else 
                 {
-                    p = Globals.FLAT[fullPath];
+                    p = new Project(fullPath, Depth);
+                    // copy dependencies
+                    p.Dependencies = new List<Project>( Globals.FLAT[fullPath].Dependencies );
+
                 }
                 // add to dependency
                 Dependencies.Add(p);

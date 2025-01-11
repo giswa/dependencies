@@ -11,7 +11,7 @@ if (args.Length > 0){
         
         Console.WriteLine("");
         Console.WriteLine(p.Filename);
-        Treeview(p.Dependencies,"",p ) ;
+        Treeview(p.Dependencies,"", new List<string>{p.Filename} ) ;
         return ;
         Console.WriteLine("");
         Console.WriteLine("Creating graph");
@@ -41,7 +41,7 @@ if (args.Length > 0){
 }
 
 
-static void Treeview(List<Project> nodes, string level , Project ancester) {
+static void Treeview(List<Project> nodes, string level , List<string> ancester) {
     string treeLevel =   "├── " ;
     string treeEnd =     "└── " ;
     string treeOpen =    "│   " ;
@@ -57,17 +57,18 @@ static void Treeview(List<Project> nodes, string level , Project ancester) {
             string treeSeparator = end ? treeEnd : treeLevel ;
             string LevelSeparator = end ? treeClosed : treeOpen ;
             
-            bool circular = true ;
-            string branch = "" ;
             
-            if (  node.Ancesters == null )   node.Ancesters = new List<String>() ;
-            node.Ancesters.Add(ancester?.Filename) ;
+            if (  node.Ancesters == null ) node.Ancesters = new List<String>( ancester) ;
 
-            circular = node.Ancesters.Contains(node.Filename) ? true : false ;
-            branch = string.Join(">", node.Ancesters );
+            //node.Ancesters.Add(ancester) ;
 
+            bool circular = node.Ancesters.Contains(node.Filename) ? true : false ;
+           
+
+            node.Ancesters.Add(node.Filename) ;
+
+            string branch = string.Join(" > ", node.Ancesters ) ;
             string circ = circular?"(!)":String.Empty ;
-
             Console.WriteLine( level + treeSeparator +  node.Filename +  $"  ({branch}) {circ} " );
 
             if ( circular) {
@@ -77,7 +78,7 @@ static void Treeview(List<Project> nodes, string level , Project ancester) {
             {
                 //Console.Write("\r\n");
                 // if (node.Dependencies.Count == 0 ) branch = new List<String>() ;
-                Treeview(node.Dependencies, level + LevelSeparator , node );
+                Treeview(node.Dependencies, level + LevelSeparator , node.Ancesters  );
 
             }
             position ++ ;
