@@ -17,10 +17,11 @@ public class Project{
         SourcePath = path ;
         BaseDirectory = new FileInfo(path).Directory.FullName;
         Filename = Path.GetFileName(path);  
-    
+        Ancesters = new List<string>();
     }
 
     public void Search(){
+        
         Dependencies = new List<Project>();
         
 		XmlDocument XmlTree = new XmlDocument();
@@ -38,23 +39,18 @@ public class Project{
                 referencePath = referencePath.Replace(@"\", Path.DirectorySeparatorChar.ToString());
                 string fullPath = Path.GetFullPath(referencePath, BaseDirectory);
 
-                Project p;
-                // if the project wasn't already parsed
-                if (!Globals.FLAT.ContainsKey(fullPath))
-                {
-                    p = new Project(fullPath, Depth);
-                    p.Search();
-                    Globals.FLAT.Add(fullPath,p);
-                }
-                else 
-                {
-                    p = new Project(fullPath, Depth);
-                    // copy dependencies
-                    p.Dependencies = new List<Project>( Globals.FLAT[fullPath].Dependencies );
+                bool circular = this.Ancesters.Contains(fullPath) ? true : false ;
 
+                if (!circular){
+
+                    Project p = new Project(fullPath, Depth);
+                    p.Ancesters = new List<string> (this.Ancesters)  ;
+                    p.Ancesters.Add(fullPath);
+                    p.Search();
+                    // add to dependency
+                    this.Dependencies.Add(p);
+                    
                 }
-                // add to dependency
-                Dependencies.Add(p);
 
             }
         }

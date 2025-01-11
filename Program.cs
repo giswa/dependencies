@@ -11,7 +11,7 @@ if (args.Length > 0){
         
         Console.WriteLine("");
         Console.WriteLine(p.Filename);
-        Treeview(p.Dependencies,"", new List<string>{p.Filename} ) ;
+        Treeview(p.Dependencies,"" ) ;
         return ;
         Console.WriteLine("");
         Console.WriteLine("Creating graph");
@@ -41,7 +41,7 @@ if (args.Length > 0){
 }
 
 
-static void Treeview(List<Project> nodes, string level , List<string> ancester) {
+static void Treeview(List<Project> nodes, string level ) {
     string treeLevel =   "├── " ;
     string treeEnd =     "└── " ;
     string treeOpen =    "│   " ;
@@ -56,31 +56,12 @@ static void Treeview(List<Project> nodes, string level , List<string> ancester) 
             bool end = position == last ;
             string treeSeparator = end ? treeEnd : treeLevel ;
             string LevelSeparator = end ? treeClosed : treeOpen ;
+        
+
+            string branch = string.Join(" > ", node.Ancesters ).Replace("/Users/gis/Projects/dotnet/dependencies/output/","") ;
+            Console.WriteLine( level + treeSeparator +  node.Filename +  $"  ({branch})" );
             
-            
-            if (  node.Ancesters == null ) node.Ancesters = new List<String>( ancester) ;
-
-            //node.Ancesters.Add(ancester) ;
-
-            bool circular = node.Ancesters.Contains(node.Filename) ? true : false ;
-           
-
-            node.Ancesters.Add(node.Filename) ;
-
-            string branch = string.Join(" > ", node.Ancesters ) ;
-            string circ = circular?"(!)":String.Empty ;
-            Console.WriteLine( level + treeSeparator +  node.Filename +  $"  ({branch}) {circ} " );
-
-            if ( circular) {
-                // Console.WriteLine( level + branch + $" !> [{node.Filename}]");
-            }
-            else
-            {
-                //Console.Write("\r\n");
-                // if (node.Dependencies.Count == 0 ) branch = new List<String>() ;
-                Treeview(node.Dependencies, level + LevelSeparator , node.Ancesters  );
-
-            }
+            Treeview(node.Dependencies, level + LevelSeparator );
             position ++ ;
         }
     }
