@@ -17,7 +17,9 @@ public class Project{
         SourcePath = path ;
         BaseDirectory = new FileInfo(path).Directory.FullName;
         Filename = Path.GetFileName(path);  
-        Ancesters = new List<string>();
+        // initialise ancester with self. Avoid Circular ref to self
+        // Children will overwrite this if any
+        Ancesters = new List<string>{path}; 
     }
 
     public void Search(){
@@ -44,8 +46,8 @@ public class Project{
                 if (!circular){
 
                     Project p = new Project(fullPath, Depth);
-                    p.Ancesters = new List<string> (this.Ancesters)  ;
-                    p.Ancesters.Add(fullPath);
+                    p.Ancesters = new List<string> (this.Ancesters)  ; // copy ancesters from parent 
+                    p.Ancesters.Add(fullPath); // and add this 
                     p.Search();
                     // add to dependency
                     this.Dependencies.Add(p);

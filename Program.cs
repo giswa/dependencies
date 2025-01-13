@@ -6,7 +6,7 @@ if (args.Length > 0){
     bool exists = pathString.IndexOfAny(Path.GetInvalidPathChars()) == -1;
 
     if (exists) {
-        Project p = new Project(pathString,0); 
+        Project p = new Project(Path.GetFullPath(pathString),0); 
         p.Search();
         
         Console.WriteLine("");
