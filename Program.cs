@@ -6,7 +6,7 @@ if (args.Length > 0){
     bool exists = pathString.IndexOfAny(Path.GetInvalidPathChars()) == -1;
 
     if (exists) {
-        Project p = new Project(Path.GetFullPath(pathString),0); 
+        Project p = new Project(Path.GetFullPath(pathString)); 
         p.Search();
         
         Console.WriteLine("");
@@ -58,8 +58,9 @@ static void Treeview(List<Project> nodes, string level ) {
             string LevelSeparator = end ? treeClosed : treeOpen ;
         
 
-            string branch = string.Join(" > ", node.Ancesters ).Replace("/Users/gis/Projects/dotnet/dependencies/output/","") ;
-            Console.WriteLine( level + treeSeparator +  node.Filename +  $"  ({branch})" );
+            string branch = string.Join(" > ", node.Ancesters.Select( path => Path.GetFileNameWithoutExtension(path) ) ) ;
+            int depth = node.Ancesters.Count ;
+            Console.WriteLine( level + treeSeparator +  node.Filename +  $"  [{depth}] ({branch})" );
             
             Treeview(node.Dependencies, level + LevelSeparator );
             position ++ ;

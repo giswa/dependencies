@@ -7,13 +7,11 @@ public class Project{
 
     private string BaseDirectory { get; set; }
     public string Filename { get; set; }
-    private int Depth { get; set; }
     public List<Project> Dependencies {get; set;}
     public List<String> Ancesters {get; set;}
 
-    public Project(string path, int depth) 
+    public Project(string path) 
     {
-        Depth = depth + 1 ;
         SourcePath = path ;
         BaseDirectory = new FileInfo(path).Directory.FullName;
         Filename = Path.GetFileName(path);  
@@ -45,7 +43,7 @@ public class Project{
 
                 if (!circular){
 
-                    Project p = new Project(fullPath, Depth);
+                    Project p = new Project(fullPath);
                     p.Ancesters = new List<string> (this.Ancesters)  ; // copy ancesters from parent 
                     p.Ancesters.Add(fullPath); // and add this 
                     p.Search();
