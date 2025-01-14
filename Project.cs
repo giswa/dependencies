@@ -3,7 +3,7 @@ using System.Xml;
 
 public class Project{
 
-    private string SourcePath { get; set; }
+    public string SourcePath { get; set; }
 
     private string BaseDirectory { get; set; }
     public string Filename { get; set; }
@@ -41,16 +41,16 @@ public class Project{
 
                 bool circular = this.Ancesters.Contains(fullPath) ? true : false ;
 
-                if (!circular){
-
-                    Project p = new Project(fullPath);
+                Project p = new Project(fullPath);
+               
+                if (!circular) {
                     p.Ancesters = new List<string> (this.Ancesters)  ; // copy ancesters from parent 
                     p.Ancesters.Add(fullPath); // and add this 
                     p.Search();
-                    // add to dependency
-                    this.Dependencies.Add(p);
-                    
                 }
+                // add to dependency
+                this.Dependencies.Add(p);
+                
 
             }
         }

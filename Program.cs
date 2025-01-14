@@ -60,7 +60,9 @@ static void Treeview(List<Project> nodes, string level ) {
 
             string branch = string.Join(" > ", node.Ancesters.Select( path => Path.GetFileNameWithoutExtension(path) ) ) ;
             int depth = node.Ancesters.Count ;
-            Console.WriteLine( level + treeSeparator +  node.Filename +  $"  [{depth}] ({branch})" );
+            string circ = depth == 1 && node.Ancesters.First() == node.SourcePath ? "{!}":"" ;
+
+            Console.WriteLine( level + treeSeparator +  node.Filename +  $" {circ}" );
             
             Treeview(node.Dependencies, level + LevelSeparator );
             position ++ ;
